@@ -76,12 +76,36 @@ window.addEventListener("DOMContentLoaded", function () {
         //Получаем данные из функции и обновляем информация на сайте
         function updateClock() {
             let t = getTimeRemaining(endtime);
-            hours.textContent = t.hours;
-            minutes.textContent = t.minutes;
-            seconds.textContent = t.seconds;
+
+            //Добавление 0 перед цифрой. Формат 00:00:00
+            if (t.seconds < 10) {
+                seconds.textContent = "0" + t.seconds;
+            }
+            else {
+                seconds.textContent = t.seconds;
+            }
+            if (t.minutes < 10) {
+                minutes.textContent = "0" + t.minutes;
+            }
+            else {
+                minutes.textContent = t.minutes;
+            }
+            if (t.hours < 10) {
+                hours.textContent = "0" + t.hours;
+            }
+            else {
+                hours.textContent = t.hours;
+            }
+            // hours.textContent = "0" + t.hours;
+            // minutes.textContent = "0" +t.minutes;
+            // seconds.textContent = "0" +t.seconds;
+
 
             if (t.total <= 0) {
                 clearInterval(timeInterval);
+                hours.textContent = '00';
+                minutes.textContent = '00';
+                seconds.textContent = '00';
             }
         }
 
