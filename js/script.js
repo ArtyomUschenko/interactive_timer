@@ -10,8 +10,8 @@ window.addEventListener("DOMContentLoaded", function () {
 
     let tab = document.querySelectorAll(".info-header-tab"), // Получаем все табы-кнопки
         info = document.querySelector(".info-header"), //Получаем родителя с табами-кнопками
-        tabContent = document.querySelectorAll(".info-tabcontent"); //Получаем весь таб-контент
-
+        tabContent = document.querySelectorAll(".info-tabcontent"), //Получаем весь таб-контент
+        btntab = document.querySelectorAll(".description-btn");
 
 
 // Цикл, который проходит по табам с индексом от 1 до 4 и меняет классы.
@@ -19,9 +19,11 @@ window.addEventListener("DOMContentLoaded", function () {
         for (let i = a; i < tabContent.length; i++) {
             tabContent[i].classList.remove("show");
             tabContent[i].classList.add("hide");
+            btntab[i].addEventListener("click", modalWindow);  // активируем кнопку на открытие модального окна
         }
     }
     hideTabContent(1); // Передаем 1, чтоб таб с индексом 0 отображался на странице
+    btntab[0].addEventListener("click", modalWindow); // Активируем кнопку с модальным окном на 0 табе
 
     // Передаем индекс таба, чтоб сменить класс
     function showTabContent(b) {
@@ -47,7 +49,7 @@ window.addEventListener("DOMContentLoaded", function () {
     //----------------------------------
     // Реализация таймера
     //----------------------------------
-    let deadline = "2024-07-23";
+    let deadline = "2024-07-24";
 
     // Получаем оставшееся время и записываем данные в функцию
     function  getTimeRemaining(endtime) {
@@ -57,12 +59,20 @@ window.addEventListener("DOMContentLoaded", function () {
             hours = Math.floor((t/(1000*60*60)) % 60), //  - Получение часов
             days = Math.floor(((t/1000/60/60) % 24)); // - получение дней
 
-            return {
-              "total" : t,
-              "hours" : hours,
-              "minutes" : minutes,
-              "seconds" : seconds
-            };
+        return {
+            "total" : t,
+            "hours" : hours,
+            "minutes" : minutes,
+            "seconds" : seconds
+        };
+    }
+
+    function getZero(num) {
+        if (num >= 0 && num < 10) {
+            return "0" + num
+        } else {
+            return num
+        }
     }
 
     //Получаем элементы на странице и запускаем функцию каждые 1000мс
@@ -73,32 +83,14 @@ window.addEventListener("DOMContentLoaded", function () {
             seconds = timer.querySelector(".seconds"),
             timeInterval = setInterval(updateClock, 1000)
 
+
         //Получаем данные из функции и обновляем информация на сайте
         function updateClock() {
             let t = getTimeRemaining(endtime);
 
-            //Добавление 0 перед цифрой. Формат 00:00:00
-            if (t.seconds < 10) {
-                seconds.textContent = "0" + t.seconds;
-            }
-            else {
-                seconds.textContent = t.seconds;
-            }
-            if (t.minutes < 10) {
-                minutes.textContent = "0" + t.minutes;
-            }
-            else {
-                minutes.textContent = t.minutes;
-            }
-            if (t.hours < 10) {
-                hours.textContent = "0" + t.hours;
-            }
-            else {
-                hours.textContent = t.hours;
-            }
-            // hours.textContent = "0" + t.hours;
-            // minutes.textContent = "0" +t.minutes;
-            // seconds.textContent = "0" +t.seconds;
+            hours.innerHTML = getZero(t.hours);
+            minutes.innerHTML = getZero(t.minutes);
+            seconds.innerHTML = getZero(t.seconds);
 
 
             if (t.total <= 0) {
@@ -112,5 +104,28 @@ window.addEventListener("DOMContentLoaded", function () {
     }
 
     setClock("timer", deadline)
+
+    //----------------------------------
+    // Реализация модального окна (Modal)
+    //----------------------------------
+    let more = document.querySelector(".more"),   //Кнопка вызова модального окна
+        overlay = document.querySelector(".overlay"), //Форма модального окна
+        close = document.querySelector(".popup-close"); // Кнопка "X" закрытия модального окна
+
+
+    function modalWindow(event) {
+        overlay.style.display = "block";
+        this.classList.add("more-splash"); //Анимация кнопки
+        document.body.style.overflow = "hidden"; //Запрещаем прокрутку страницы
+    }
+
+    more.addEventListener("click", modalWindow);
+
+    //Закрываем модальное окно
+    close.addEventListener("click", function () {
+        overlay.style.display = "none";
+        more.classList.remove("more-splash"); //Анимация кнопки
+        document.body.style.overflow = ""; //Снимаем ограничение на прокрутку страницы
+    })
 });
 
